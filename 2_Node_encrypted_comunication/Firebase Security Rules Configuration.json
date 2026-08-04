@@ -1,0 +1,23 @@
+{
+  "rules": {
+    "pairs": {
+      "$pair_id": {
+        ".read": "auth != null && (auth.uid === data.child('user1').val() || auth.uid === data.child('user2').val())",
+        ".write": "auth != null && (!data.exists() || auth.uid === data.child('user1').val() || auth.uid === data.child('user2').val())",
+        "pairing_handshake": {
+          ".validate": "newData.hasChildren(['initiator_pubkey', 'pin_hash'])"
+        },
+        "packets": {
+          "$packet_id": {
+            ".validate": "newData.hasChildren(['header', 'iv', 'payload', 'tag']) && newData.child('payload').val().length <= 1300"
+          }
+        },
+        "webrtc_signaling": {
+          "offer": { ".write": "auth != null" },
+          "answer": { ".write": "auth != null" },
+          "candidates": { ".write": "auth != null" }
+        }
+      }
+    }
+  }
+}
